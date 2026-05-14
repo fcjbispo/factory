@@ -17,18 +17,27 @@ Each bounded context exposes its own spec in `docs/api/`. The `docs/domain/conte
 ## Structure
 
 ```
-~/Dev/
-├── Factory/                    ← Factory repository
-│   ├── factory-init.sh         ← single entry point
-│   ├── FACTORY-GUIDE.md        ← canonical guide
-│   └── docs/
-│       ├── agents/             ← 7 AI agent profiles
-│       └── templates/          ← documentation templates
-└── Projects/
-    └── <project>/              ← source code
+$FACTORY_ROOT/
+├── factory-init.sh         ← single entry point
+├── FACTORY-GUIDE.md        ← canonical guide
+└── docs/
+    ├── agents/             ← 7 AI agent profiles
+    └── templates/          ← documentation templates
 ```
 
-Documentation and configuration live in `~/Dev/Factory/<project>/`. Source code lives in `~/Dev/Projects/<project>/`. The bridge between them is `/add-dir` within Claude Code sessions.
+Documentation and configuration live in `$FACTORY_ROOT/<project>/`. Source code lives in `$FACTORY_PROJECTS_DIR/<project>/`. The bridge between them is `/add-dir` within AI agent sessions.
+
+## Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `FACTORY_ROOT` | Factory root directory | `$PWD` (script directory) |
+| `FACTORY_PROJECTS_DIR` | Projects source code directory | `$HOME/Dev/Projects` |
+| `FACTORY_SKILLS_DIR` | Directory for agent skills | `~/.openclaw/skills` |
+| `FACTORY_AGENT_OVERRIDES_DIR` | Agent override configurations | `~/.openclaw/workspace/agents` |
+| `FACTORY_RUNTIME_CONFIG` | Runtime configuration file | `~/.openclaw/openclaw.json` |
+| `FACTORY_AVAILABLE_MODELS` | Comma-separated list of available models | Auto-detected |
+| `FACTORY_LANG` | Default locale (en, pt, etc.) | `en` |
 
 ## Installation
 

@@ -1,8 +1,9 @@
 ---
 name: factory
 description: |
-  Initializes Factory projects in OpenClaw, loading context, documentation, and
-  configuring the agent to operate according to the Factory framework.
+  Initializes Factory projects in any AI agent runtime, loading context,
+  documentation, and configuring the agent to operate according to the Factory
+  framework.
   
   Use when starting work on any project documented in Factory.
   
@@ -31,7 +32,7 @@ This skill initializes the Factory context for projects documented in `$FACTORY_
 
 ## 🎯 Objective
 
-Provide the infrastructure for initializing Factory projects for OpenClaw agents,
+Provide the infrastructure for initializing Factory projects for AI agents,
 ensuring:
 - Correct loading of documentation per project
 - Proper allocation of LLM models by role
@@ -84,7 +85,7 @@ by role, with hierarchical fallbacks.
 Each agent can customize their allocation by creating:
 
 ```
-~/.openclaw/workspace/agents/<agent-name>/
+$FACTORY_AGENT_OVERRIDES_DIR/<agent-name>/
 └── factory-overrides.json
 ```
 
@@ -99,7 +100,7 @@ When loading Factory project:
 - Fallback: never exceed 3 simultaneous models
 ```
 
-## 🔧 Integration with OpenClaw
+## 🔧 Integration with Runtime
 
 ### Skill Registration
 
@@ -107,15 +108,16 @@ To install globally after extracting the Factory distribution:
 
 ```bash
 # Create symbolic link (recommended)
-ln -s $FACTORY_ROOT/skill ~/.openclaw/skills/factory
+ln -s $FACTORY_ROOT/skill $FACTORY_SKILLS_DIR/factory
 
 # Or copy
-# cp -r $FACTORY_ROOT/skill ~/.openclaw/skills/factory
+# cp -r $FACTORY_ROOT/skill $FACTORY_SKILLS_DIR/factory
 ```
 
 ### Model Registration
 
-Models used by the router must be registered in `~/.openclaw/openclaw.json`:
+Models used by the router must be registered in the runtime configuration
+(`$FACTORY_RUNTIME_CONFIG`):
 
 ```json
 {
@@ -134,19 +136,32 @@ Models used by the router must be registered in `~/.openclaw/openclaw.json`:
 }
 ```
 
+## 📚 Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `FACTORY_ROOT` | Factory root directory | `$PWD` (script directory) |
+| `FACTORY_PROJECTS_DIR` | Projects source code directory | `$HOME/Dev/Projects` |
+| `FACTORY_SKILLS_DIR` | Directory for agent skills | `~/.openclaw/skills` |
+| `FACTORY_AGENT_OVERRIDES_DIR` | Agent override configurations | `~/.openclaw/workspace/agents` |
+| `FACTORY_RUNTIME_CONFIG` | Runtime configuration file | `~/.openclaw/openclaw.json` |
+| `FACTORY_AVAILABLE_MODELS` | Comma-separated list of available models | Auto-detected |
+| `FACTORY_LANG` | Default locale (en, pt, etc.) | `en` |
+
 ## 📚 Dependencies
 
-- OpenClaw with skill support
-- Access to `$FACTORY_ROOT/` (documentation)
-- Zikkaron MCP configured (optional, recommended)
-- LLM models available via Ollama
+- **AI Agent Runtime** — OpenClaw, Claude Code, or any compatible runtime
+- **Zikkaron MCP** — Persistent memory (required)
+- **Access to `$FACTORY_ROOT/`** — Factory documentation
+- **LLM models** — Available via configured provider
 
 ## 📝 Notes
 
-- This skill is **agent-agnostic** — works for any OpenClaw agent
+- This skill is **runtime-agnostic** — works with any AI agent runtime
 - The Model Router is **declarative** — no scripts, only JSON configuration
 - Overrides are **optional** — the base should work for 90% of cases
 - The 3-model restriction is **soft** — automatic fallback, not error
+- Default paths assume **OpenClaw** — set `FACTORY_*` variables for other runtimes
 
 ---
 

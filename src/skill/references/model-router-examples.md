@@ -6,7 +6,7 @@
 
 **Situation:** Architect Agent wants to experiment with cogito-2.1 for architecture.
 
-**File:** `~/.openclaw/workspace/agents/architect/factory-overrides.json`
+**File:** `$FACTORY_AGENT_OVERRIDES_DIR/architect/factory-overrides.json`
 
 ```json
 {
@@ -27,7 +27,7 @@
 
 **Situation:** DevOps Agent wants faster responses for infrastructure tasks.
 
-**File:** `~/.openclaw/workspace/agents/devops/factory-overrides.json`
+**File:** `$FACTORY_AGENT_OVERRIDES_DIR/devops/factory-overrides.json`
 
 ```json
 {
@@ -46,7 +46,7 @@
 
 **Situation:** DB Agent needs deep reasoning for data modeling.
 
-**File:** `~/.openclaw/workspace/agents/db/factory-overrides.json`
+**File:** `$FACTORY_AGENT_OVERRIDES_DIR/db/factory-overrides.json`
 
 ```json
 {

@@ -14,7 +14,7 @@ PO: "Start the ExampleProject project"
 
 The agent must:
 - Identify that a Factory project initialization was requested
-- Load the `factory` skill (available globally)
+- Load the `factory` skill (available globally at `$FACTORY_SKILLS_DIR/`)
 - Read the Model Router base configuration
 
 ### 3. Detect Project
@@ -107,4 +107,11 @@ Warning: docs/context/active.md not found
 Warning: Preferred model "X" not available
 ```
 - Use fallback from `config/model-router-base.json`
-- If all fail, use the default model configured in OpenClaw
+- If all fail, use the default model configured in the runtime
+
+### Runtime Not OpenClaw
+
+If using Claude Code or another runtime:
+- Set `FACTORY_SKILLS_DIR` to the appropriate path (e.g., `~/.claude/skills`)
+- Set `FACTORY_RUNTIME_CONFIG` to the runtime's config file
+- Set `FACTORY_AGENT_OVERRIDES_DIR` to the agents directory

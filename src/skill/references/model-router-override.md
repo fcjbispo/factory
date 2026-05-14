@@ -17,8 +17,8 @@ that work for 90% of cases. But a specific agent may need adjustments for:
 ### 1. Create the File
 
 ```bash
-mkdir -p ~/.openclaw/workspace/agents/<agent-name>/
-touch ~/.openclaw/workspace/agents/<agent-name>/factory-overrides.json
+mkdir -p $FACTORY_AGENT_OVERRIDES_DIR/<agent-name>/
+touch $FACTORY_AGENT_OVERRIDES_DIR/<agent-name>/factory-overrides.json
 ```
 
 ### 2. Define the Override
@@ -48,9 +48,17 @@ The skill validates the override against the schema before applying.
 
 ## Limitations
 
-- Maximum 3 simultaneous models (Ollama restriction)
-- Fallbacks must be available in `~/.openclaw/openclaw.json`
+- Maximum 3 simultaneous models (provider restriction)
+- Fallbacks must be available in runtime config (`$FACTORY_RUNTIME_CONFIG`)
 - Overrides are optional — if invalid, the base is used
+
+## Runtime-Specific Paths
+
+| Runtime | Default `FACTORY_AGENT_OVERRIDES_DIR` |
+|---------|--------------------------------------|
+| OpenClaw | `~/.openclaw/workspace/agents/` |
+| Claude Code | `~/.claude/agents/` |
+| Custom | Set `FACTORY_AGENT_OVERRIDES_DIR` env var |
 
 ---
 

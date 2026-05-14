@@ -794,7 +794,7 @@ cmd_help() {
 cmd_skill() {
   local mode="${1:-link}"
   local skill_src="$FACTORY_ROOT/skill"
-  local skill_dst="$HOME/.openclaw/skills/factory"
+  local skill_dst="${FACTORY_SKILLS_DIR:-$HOME/.openclaw/skills}/factory"
 
   require_templates
 

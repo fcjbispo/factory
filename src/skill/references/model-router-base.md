@@ -14,7 +14,7 @@ The Model Router is a **declarative** component (JSON) that defines:
 ### Discovery Phase
 
 When an agent initializes, the skill:
-1. Lists available models in `~/.openclaw/openclaw.json`
+1. Lists available models from `$FACTORY_RUNTIME_CONFIG` or provider API
 2. Maps model capabilities (coding, reasoning, analysis)
 3. Matches capabilities to role requirements
 
@@ -22,7 +22,7 @@ When an agent initializes, the skill:
 
 For the requested role, find models that:
 - Satisfy minimum requirements (context window, reasoning level)
-- Are currently available (loaded in Ollama)
+- Are currently available (loaded in provider)
 - Do not exceed the 3-model concurrency limit
 
 ### Fallback Phase

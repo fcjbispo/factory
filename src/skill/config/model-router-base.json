@@ -4,7 +4,7 @@
   "description": "Model Router for Factory — LLM model allocation by role using capabilities and dynamic discovery",
   "constraint": {
     "max_concurrent_models": 3,
-    "description": "Maximum of 3 concurrent LLM models per Ollama account"
+    "description": "Maximum of 3 concurrent LLM models per provider account"
   },
   "allocation_strategy": "capability-based-matching",
 
@@ -12,8 +12,8 @@
     "method": "query_available_models",
     "description": "Discover available models at installation time",
     "sources": [
-      "~/.openclaw/openclaw.json (agents.defaults.models)",
-      "Provider API (Ollama)",
+      "Runtime config ($FACTORY_RUNTIME_CONFIG)",
+      "Provider API (Ollama, OpenAI, etc.)",
       "Environment variable: FACTORY_AVAILABLE_MODELS"
     ],
     "refresh_interval": "at every project initialization"
@@ -118,7 +118,7 @@
       "3. SCORE: Calculate match score based on required_capabilities (weight 70%) + preferred_capabilities (weight 30%)",
       "4. SORT: Sort by descending score",
       "5. SELECT: Primary = #1, Fallback_1 = #2, Fallback_2 = #3",
-      "6. VALIDATE: Ensure selected models are in openclaw.json"
+      "6. VALIDATE: Ensure selected models are in runtime config ($FACTORY_RUNTIME_CONFIG)"
     ],
     "scoring": {
       "required_match": 10,
@@ -216,12 +216,12 @@
   "override_policy": {
     "description": "Agents can override dynamic allocations",
     "methods": [
-      "File: ~/.openclaw/workspace/agents/<name>/factory-init-overrides.json",
+      "File: $FACTORY_AGENT_OVERRIDES_DIR/<name>/factory-overrides.json",
       "Section in workspace AGENTS.md",
       "Environment variable: FACTORY_INIT_OVERRIDE_PATH"
     ],
     "constraints": [
-      "Overrides must use models available in openclaw.json",
+      "Overrides must use models available in runtime config",
       "Overrides cannot increase max_concurrent_models",
       "Overrides are the agent/PO's responsibility",
       "Overrides can specify exact provider or capabilities"
