@@ -1,0 +1,147 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Factory Init Model Router Schema",
+  "description": "Schema de validação para configuração do Model Router",
+  "type": "object",
+  "required": ["version", "constraint", "role_allocation", "agent_role_mapping"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Versão semântica da configuração"
+    },
+    "description": {
+      "type": "string",
+      "description": "Descrição da configuração"
+    },
+    "constraint": {
+      "type": "object",
+      "required": ["max_concurrent_models"],
+      "properties": {
+        "max_concurrent_models": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "Máximo de modelos simultâneos"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "allocation_strategy": {
+      "type": "string",
+      "enum": ["priority-based-with-fallback", "round-robin", "cost-optimized"],
+      "description": "Estratégia de alocação de modelos"
+    },
+    "model_pools": {
+      "type": "object",
+      "properties": {
+        "primary": { "$ref": "#/definitions/model_pool" },
+        "secondary": { "$ref": "#/definitions/model_pool" },
+        "tertiary": { "$ref": "#/definitions/model_pool" }
+      }
+    },
+    "role_allocation": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-z_]+$": {
+          "type": "object",
+          "required": ["primary", "fallback_1"],
+          "properties": {
+            "primary": { "type": "string" },
+            "fallback_1": { "type": "string" },
+            "fallback_2": { "type": "string" },
+            "rationale": { "type": "string" }
+          }
+        }
+      }
+    },
+    "agent_role_mapping": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-z]+$": {
+          "type": "object",
+          "required": ["name", "roles", "default_model"],
+          "properties": {
+            "name": { "type": "string" },
+            "roles": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "default_model": { "type": "string" },
+            "model_switching": { "type": "boolean" },
+            "role_models": {
+              "type": "object",
+              "additionalProperties": { "type": "string" }
+            },
+            "description": { "type": "string" }
+          }
+        }
+      }
+    },
+    "concurrency_management": {
+      "type": "object",
+      "properties": {
+        "strategy": { "type": "string" },
+        "rules": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "family_grouping": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "override_policy": {
+      "type": "object",
+      "properties": {
+        "description": { "type": "string" },
+        "methods": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "constraints": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "model_pool": {
+      "type": "object",
+      "required": ["description", "models"],
+      "properties": {
+        "description": { "type": "string" },
+        "models": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/model_spec" }
+        }
+      }
+    },
+    "model_spec": {
+      "type": "object",
+      "required": ["id", "provider", "tier"],
+      "properties": {
+        "id": { "type": "string" },
+        "provider": { "type": "string", "pattern": "^ollama/" },
+        "tier": {
+          "type": "string",
+          "enum": ["S", "A", "A-", "B+", "B", "B-", "C", "D"]
+        },
+        "score": { "type": "number", "minimum": 0, "maximum": 100 },
+        "strengths": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "context_window": { "type": "integer" },
+        "cost_per_1m_tokens": { "type": "number" }
+      }
+    }
+  }
+}

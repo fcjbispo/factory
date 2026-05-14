@@ -12,6 +12,7 @@
 #   $(OUTDIR)/factory-init.sh  — localized shell script
 #   $(OUTDIR)/docs/            — localized documentation
 #   $(OUTDIR)/guides/          — localized guides
+#   $(OUTDIR)/skill/           — localized skill (en_US only)
 #
 # Requires: envsubst (gettext)
 # =============================================================================
@@ -24,17 +25,22 @@ LOCALE_FILE := locales/$(LANG).env
 SCRIPT_SRC  := factory-init.sh
 DOCS_SRC    := docs
 GUIDES_SRC  := docs/guides
+SKILL_SRC   := skill
 
 # All markdown files under docs/
 DOC_FILES := $(shell find $(DOCS_SRC) -type f -name '*.md' 2>/dev/null)
 OUT_DOC_FILES := $(patsubst $(DOCS_SRC)/%,$(OUTDIR)/docs/%,$(DOC_FILES))
 
-.PHONY: all dirs script docs guides
+# Skill files
+SKILL_FILES := $(shell find $(SKILL_SRC) -type f 2>/dev/null)
+OUT_SKILL_FILES := $(patsubst $(SKILL_SRC)/%,$(OUTDIR)/skill/%,$(SKILL_FILES))
 
-all: dirs script docs guides
+.PHONY: all dirs script docs guides skill
+
+all: dirs script docs guides skill
 
 dirs:
-	@mkdir -p $(OUTDIR)/docs $(OUTDIR)/guides
+	@mkdir -p $(OUTDIR)/docs $(OUTDIR)/guides $(OUTDIR)/skill/config $(OUTDIR)/skill/references
 
 script: $(OUTDIR)/factory-init.sh
 
@@ -77,3 +83,9 @@ guides: $(OUTDIR)/guides/FACTORY-GUIDE.md
 $(OUTDIR)/guides/FACTORY-GUIDE.md: $(GUIDES_SRC)/FACTORY-GUIDE.md $(LOCALE_FILE)
 	@set -a; . $(LOCALE_FILE); set +a; \
 		envsubst '$i18n_' < $< > $@
+
+skill: $(OUT_SKILL_FILES)
+
+$(OUTDIR)/skill/%: $(SKILL_SRC)/%
+	@mkdir -p $(dir $@)
+	@cp -r $< $@

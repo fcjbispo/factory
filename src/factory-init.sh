@@ -778,6 +778,7 @@ cmd_help() {
   echo "    shell-setup                    Gera bloco de função shell"
   echo "    update [--version=X.Y.Z] [--dry-run]  Atualiza arquivos do framework"
   echo "    sync   <nome> [--dry-run]     Propaga mudanças de templates para projeto"
+  echo "    skill   [link|copy]            Instala a skill no OpenClaw"
   echo "    help                           Esta mensagem"
   echo ""
   echo "  Variáveis de ambiente:"
@@ -785,6 +786,49 @@ cmd_help() {
   echo "    FACTORY_PROJECTS_DIR  Onde ficam os projetos (padrão: ~/Dev/Projects)"
   echo "    GITHUB_TOKEN          Token para API do GitHub (evita rate limit)"
   echo ""
+}
+
+# ---------------------------------------------------------------------------
+# Skill installation
+# ---------------------------------------------------------------------------
+cmd_skill() {
+  local mode="${1:-link}"
+  local skill_src="$FACTORY_ROOT/skill"
+  local skill_dst="$HOME/.openclaw/skills/factory"
+
+  require_templates
+
+  if [ ! -d "$skill_src" ]; then
+    error "$i18n_skill_not_found $skill_src"
+  fi
+
+  case "$mode" in
+    link)
+      if [ -L "$skill_dst" ]; then
+        info "Removing existing symlink $skill_dst"
+        rm "$skill_dst"
+      elif [ -d "$skill_dst" ]; then
+        info "Removing existing directory $skill_dst"
+        rm -rf "$skill_dst"
+      fi
+      ln -s "$skill_src" "$skill_dst"
+      success "$i18n_skill_link_created: $skill_dst -> $skill_src"
+      ;;
+    copy)
+      if [ -L "$skill_dst" ]; then
+        rm "$skill_dst"
+      elif [ -d "$skill_dst" ]; then
+        rm -rf "$skill_dst"
+      fi
+      cp -r "$skill_src" "$skill_dst"
+      success "$i18n_skill_copy_done: $skill_dst"
+      ;;
+    *)
+      error "Usage: factory-init.sh skill [link|copy]"
+      ;;
+  esac
+
+  success "$i18n_skill_installed"
 }
 
 # ---------------------------------------------------------------------------
@@ -800,5 +844,6 @@ case "${1:-help}" in
   shell-setup) cmd_shell_setup ;;
   update)      cmd_update "${@:2}" ;;
   sync)        cmd_sync "${2:-}" "${@:3}" ;;
+  skill)       cmd_skill "${2:-link}" ;;
   help|*)      cmd_help ;;
 esac
