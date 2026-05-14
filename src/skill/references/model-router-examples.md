@@ -2,11 +2,11 @@
 
 *Reference for the factory skill*
 
-## Example 1: Zwen — Override for cogito-2.1
+## Example 1: Architect Agent — Override for cogito-2.1
 
-**Situation:** Zwen wants to experiment with cogito-2.1 for architecture.
+**Situation:** Architect Agent wants to experiment with cogito-2.1 for architecture.
 
-**File:** `~/.openclaw/workspace/agents/zwen/factory-overrides.json`
+**File:** `~/.openclaw/workspace/agents/architect/factory-overrides.json`
 
 ```json
 {
@@ -21,13 +21,13 @@
 }
 ```
 
-**Result:** Zwen uses cogito-2.1 when available, falls back to kimi-k2.6.
+**Result:** Architect Agent uses cogito-2.1 when available, falls back to kimi-k2.6.
 
-## Example 2: Hel — Faster DevOps
+## Example 2: DevOps Agent — Faster DevOps
 
-**Situation:** Hel wants faster responses for infrastructure tasks.
+**Situation:** DevOps Agent wants faster responses for infrastructure tasks.
 
-**File:** `~/.openclaw/workspace/agents/hel/factory-overrides.json`
+**File:** `~/.openclaw/workspace/agents/devops/factory-overrides.json`
 
 ```json
 {
@@ -42,11 +42,11 @@
 }
 ```
 
-## Example 3: Balder — Schema Focus
+## Example 3: DB Agent — Schema Focus
 
-**Situation:** Balder needs deep reasoning for data modeling.
+**Situation:** DB Agent needs deep reasoning for data modeling.
 
-**File:** `~/.openclaw/workspace/agents/balder/factory-overrides.json`
+**File:** `~/.openclaw/workspace/agents/db/factory-overrides.json`
 
 ```json
 {

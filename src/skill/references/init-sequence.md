@@ -7,7 +7,7 @@
 ### 1. Receive PO Request
 
 ```
-Chicão: "Zwen, start the MyBacklogManager project"
+PO: "Start the ExampleProject project"
 ```
 
 ### 2. Load Factory Skill
@@ -22,8 +22,8 @@ The agent must:
 Map the name/path to the corresponding Factory directory:
 
 ```
-~/Dev/Factory/
-├── MyBacklogManager/          ← Requested project
+$FACTORY_ROOT/
+├── ExampleProject/          ← Requested project
 │   ├── docs/
 │   │   ├── INDEX.md           ← Load first
 │   │   ├── GUIDE.md           ← Load second
@@ -43,11 +43,11 @@ Based on the agent's identity and the project phase:
 
 | Agent | Default Role(s) | When to Invoke |
 |-------|-----------------|----------------|
-| **Zwen** | Senior Architect | Start of project, structural decisions |
-| **Freya** | Full-Stack Developer | Feature implementation |
-| **Freyr** | Code Reviewer | PR review, quality validation |
-| **Balder** | DB Architect | Data modeling, migrations |
-| **Hel** | DevOps/SRE + Security | Infrastructure, CI/CD, security |
+| **Architect Agent** | Senior Architect | Start of project, structural decisions |
+| **Developer Agent** | Full-Stack Developer | Feature implementation |
+| **Reviewer Agent** | Code Reviewer | PR review, quality validation |
+| **DB Agent** | DB Architect | Data modeling, migrations |
+| **DevOps Agent** | DevOps/SRE + Security | Infrastructure, CI/CD, security |
 
 ### 5. Allocate Model
 
@@ -65,13 +65,13 @@ Use the Model Router to choose the best available model:
 
 ```bash
 # Via MCP Zikkaron
-get_project_context("~/Dev/Factory/MyBacklogManager")
+get_project_context("$FACTORY_ROOT/ExampleProject")
 ```
 
 ### 7. Confirm Initialization
 
 Report to the user:
-- ✅ Project detected: `MyBacklogManager`
+- ✅ Project detected: `ExampleProject`
 - ✅ Role: `Senior Architect`
 - ✅ Model: `kimi-k2.6:cloud`
 - ✅ Documentation loaded: INDEX.md, GUIDE.md, active.md
@@ -88,7 +88,7 @@ Proceed with the first task defined in `context/active.md`.
 ### Project Not Found
 
 ```
-Error: Project "X" not found in ~/Dev/Factory/
+Error: Project "X" not found in $FACTORY_ROOT/
 ```
 - Check if the project was registered with `factory-init.sh new <name>`
 - Verify if the `.factory` file exists in the project directory

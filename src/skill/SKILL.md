@@ -2,7 +2,7 @@
 name: factory
 description: |
   Initializes Factory projects in OpenClaw, loading context, documentation, and
-  configuring the agent to operate according to the FBNet framework.
+  configuring the agent to operate according to the Factory framework.
   
   Use when starting work on any project documented in Factory.
   
@@ -21,13 +21,13 @@ triggers:
   - "factory-init"
 
 version: "1.3.1"
-author: "Zwen (FBNet Architect)"
+author: "Factory Team"
 date: "2026-05-14"
 ---
 
 # 🏭 Factory Init — Project Initialization Skill
 
-This skill initializes the Factory context for projects documented in `~/Dev/Factory/`.
+This skill initializes the Factory context for projects documented in `$FACTORY_ROOT/`.
 
 ## 🎯 Objective
 
@@ -59,7 +59,7 @@ skill/
 ### Basic Initialization
 
 ```
-User: "Zwen, start the MyBacklogManager project"
+User: "Start the ExampleProject project"
 Agent: Load skill → Read configuration → Apply model by role → Init context
 ```
 
@@ -137,7 +137,7 @@ Models used by the router must be registered in `~/.openclaw/openclaw.json`:
 ## 📚 Dependencies
 
 - OpenClaw with skill support
-- Access to `~/Dev/Factory/` (documentation)
+- Access to `$FACTORY_ROOT/` (documentation)
 - Zikkaron MCP configured (optional, recommended)
 - LLM models available via Ollama
 

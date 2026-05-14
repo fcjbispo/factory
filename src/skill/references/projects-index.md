@@ -2,22 +2,22 @@
 
 *Reference for the factory skill — maintained manually or generated automatically*
 
-## Active Projects (HOT)
+## Example Projects
 
 | # | Project | Status | Code | Factory Docs |
 |---|---------|--------|------|--------------|
-| 1 | **MyGDriveSync** | Production | `~/Dev/Projects/MyGDriveSync/` | ✅ Complete |
-| 2 | **FBNet** | Production | `~/Dev/Projects/FBNet/` | ✅ Complete |
-| 3 | **MyBacklogManager** | In development | `~/Dev/Projects/MyBacklogManager/` | ✅ Complete |
-| 4 | **MyCodebase** | In development | `~/Dev/Projects/MyCodebase/` | ✅ Complete |
-| 5 | **FBPyUtils** | Base library | `~/Dev/Projects/FBPyUtils/` | ✅ Complete |
+| 1 | **ExampleApp** | Production | `$FACTORY_PROJECTS_DIR/ExampleApp/` | ✅ Complete |
+| 2 | **AnotherApp** | Production | `$FACTORY_PROJECTS_DIR/AnotherApp/` | ✅ Complete |
+| 3 | **ExampleProject** | In development | `$FACTORY_PROJECTS_DIR/ExampleProject/` | ✅ Complete |
+| 4 | **SampleProject** | In development | `$FACTORY_PROJECTS_DIR/SampleProject/` | ✅ Complete |
+| 5 | **CoreLib** | Base library | `$FACTORY_PROJECTS_DIR/CoreLib/` | ✅ Complete |
 
 ## Factory Structure per Project
 
 Each project follows the v1.3.0 structure:
 
 ```
-~/Dev/Factory/
+$FACTORY_ROOT/
 └── <Project>/
     ├── docs/
     │   ├── INDEX.md              ← Entry point
@@ -42,10 +42,10 @@ Each project follows the v1.3.0 structure:
 ### For Agent
 
 1. Read this file to identify available projects
-2. Locate `~/Dev/Factory/<project>/docs/INDEX.md`
+2. Locate `$FACTORY_ROOT/<project>/docs/INDEX.md`
 3. Follow initialization sequence in `init-sequence.md`
 
-### For PO (Chicão)
+### For Product Owner (PO)
 
 - Add new projects to this index
 - Update status when changed
@@ -53,15 +53,15 @@ Each project follows the v1.3.0 structure:
 
 ## Naming Conventions
 
-- **Project name:** PascalCase (ex: MyBacklogManager)
-- **Factory folder:** Same name in `~/Dev/Factory/`
-- **Code folder:** Same name in `~/Dev/Projects/`
+- **Project name:** PascalCase (ex: ExampleProject)
+- **Factory folder:** Same name in `$FACTORY_ROOT/`
+- **Code folder:** Same name in `$FACTORY_PROJECTS_DIR/`
 - **Source code:** In English
 - **Documentation:** In English (base) with localization support
 
 ## Golden Rule
 
-> `~/Dev/Factory/docs/` = PO exclusive territory
+> `$FACTORY_ROOT/docs/` = PO exclusive territory
 > Never create/modify without express authorization
 
 ---

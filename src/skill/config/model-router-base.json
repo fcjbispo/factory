@@ -13,200 +13,195 @@
     "description": "Discover available models at installation time",
     "sources": [
       "~/.openclaw/openclaw.json (agents.defaults.models)",
-      "API do provider Ollama",
-      "Variável de ambiente FACTORY_AVAILABLE_MODELS"
+      "Provider API (Ollama)",
+      "Environment variable: FACTORY_AVAILABLE_MODELS"
     ],
     "refresh_interval": "at every project initialization"
   },
 
   "capability_definitions": {
-    "description": "Capabilities que um modelo pode ter. O agente deve mapear os modelos disponíveis para estas capabilities.",
+    "description": "Capabilities a model can have. The agent maps available models to these capabilities.",
     
-    "raciocinio_profundo": {
+    "deep_reasoning": {
       "description": "Complex reasoning, architecture, structural decisions",
       "indicators": ["tier_A", "score_>80", "context_>128k"]
     },
-    "raciocinio_equilibrado": {
+    "balanced_reasoning": {
       "description": "Moderate reasoning, general tasks",
       "indicators": ["tier_B+", "score_>75", "context_>128k"]
     },
-    "coding_especializado": {
-      "description": "Geração e análise de código",
+    "coding_specialized": {
+      "description": "Code generation and analysis",
       "indicators": ["coding_score_>80", "swe_bench_>60", "supports_tools"]
     },
     "agentic_coding": {
-      "description": "Navegação de codebase, edição multi-arquivo",
+      "description": "Codebase navigation, multi-file editing",
       "indicators": ["swe_bench_>70", "supports_file_ops", "context_>200k"]
     },
-    "velocidade": {
-      "description": "Resposta rápida, baixa latência",
+    "speed": {
+      "description": "Fast response, low latency",
       "indicators": ["tokens_per_sec_>100", "time_to_first_token_<1s"]
     },
-    "contexto_longo": {
-      "description": "Janela de contexto grande",
+    "long_context": {
+      "description": "Large context window",
       "indicators": ["context_window_>200k"]
     },
-    "custo_baixo": {
-      "description": "Custo por token baixo",
+    "low_cost": {
+      "description": "Low cost per token",
       "indicators": ["cost_per_1m_<0.10"]
     },
     "multimodal": {
-      "description": "Suporte a imagens/vídeo",
+      "description": "Image/video support",
       "indicators": ["supports_vision", "supports_audio"]
     }
   },
 
   "role_requirements": {
-    "description": "Requisitos de capabilities por papel. O router encontra modelos que satisfazem estes requisitos.",
+    "description": "Capability requirements per role. The router finds models that satisfy these requirements.",
     
-    "arquiteto_senior": {
-      "required_capabilities": ["raciocinio_profundo", "contexto_longo"],
-      "preferred_capabilities": ["coding_especializado"],
+    "senior_architect": {
+      "required_capabilities": ["deep_reasoning", "long_context"],
+      "preferred_capabilities": ["coding_specialized"],
       "min_tier": "A",
       "min_context_window": 128000,
-      "rationale": "Arquitetura requer raciocínio profundo e visão sistêmica"
+      "rationale": "Architecture requires deep reasoning and systemic vision"
     },
     "fullstack_developer": {
-      "required_capabilities": ["coding_especializado", "raciocinio_equilibrado"],
-      "preferred_capabilities": ["agentic_coding", "contexto_longo"],
+      "required_capabilities": ["coding_specialized", "balanced_reasoning"],
+      "preferred_capabilities": ["agentic_coding", "long_context"],
       "min_tier": "A-",
       "min_context_window": 128000,
-      "rationale": "Desenvolvimento full-stack beneficia de modelo versátil que equilibra coding e raciocínio"
+      "rationale": "Full-stack development benefits from a versatile model that balances coding and reasoning"
     },
     "code_reviewer": {
-      "required_capabilities": ["agentic_coding", "raciocinio_equilibrado"],
-      "preferred_capabilities": ["contexto_longo"],
+      "required_capabilities": ["agentic_coding", "balanced_reasoning"],
+      "preferred_capabilities": ["long_context"],
       "min_tier": "A-",
       "min_context_window": 128000,
-      "rationale": "Code review de múltiplos arquivos exige navegação de codebase"
+      "rationale": "Multi-file code review requires codebase navigation"
     },
     "qa_tester": {
-      "required_capabilities": ["coding_especializado"],
-      "preferred_capabilities": ["raciocinio_equilibrado"],
+      "required_capabilities": ["coding_specialized"],
+      "preferred_capabilities": ["balanced_reasoning"],
       "min_tier": "B+",
       "min_context_window": 64000,
-      "rationale": "Geração de testes unitários beneficia de especialista em coding"
+      "rationale": "Unit test generation benefits from a coding specialist"
     },
     "db_architect": {
-      "required_capabilities": ["raciocinio_profundo", "raciocinio_equilibrado"],
-      "preferred_capabilities": ["contexto_longo"],
+      "required_capabilities": ["deep_reasoning", "balanced_reasoning"],
+      "preferred_capabilities": ["long_context"],
       "min_tier": "A",
       "min_context_window": 128000,
-      "rationale": "Modelagem de dados (schema-first) requer raciocínio profundo"
+      "rationale": "Data modeling (schema-first) requires deep reasoning"
     },
     "devops_sre": {
-      "required_capabilities": ["velocidade", "raciocinio_equilibrado"],
-      "preferred_capabilities": ["custo_baixo", "contexto_longo"],
+      "required_capabilities": ["speed", "balanced_reasoning"],
+      "preferred_capabilities": ["low_cost", "long_context"],
       "min_tier": "B",
       "min_context_window": 64000,
-      "rationale": "DevOps/SRE prioriza velocidade para pipelines e operações"
+      "rationale": "DevOps/SRE prioritizes speed for pipelines and operations"
     },
     "security_analyst": {
-      "required_capabilities": ["raciocinio_profundo", "raciocinio_equilibrado"],
-      "preferred_capabilities": ["contexto_longo"],
+      "required_capabilities": ["deep_reasoning", "balanced_reasoning"],
+      "preferred_capabilities": ["long_context"],
       "min_tier": "A-",
       "min_context_window": 128000,
-      "rationale": "Security requer raciocínio profundo para threat modeling"
+      "rationale": "Security requires deep reasoning for threat modeling"
     }
   },
 
   "matching_algorithm": {
-    "description": "Como encontrar o melhor modelo para um papel",
+    "description": "How to find the best model for a role",
     "steps": [
-      "1. LISTAR: Obter todos os modelos disponíveis do provider",
-      "2. FILTRAR: Manter apenas modelos que satisfazem min_tier e min_context_window",
-      "3. SCOREAR: Calcular score de match baseado em required_capabilities (peso 70%) + preferred_capabilities (peso 30%)",
-      "4. ORDENAR: Sort por score descendente",
-      "5. SELECIONAR: Primary = #1, Fallback_1 = #2, Fallback_2 = #3",
-      "6. VALIDAR: Garantir que selected models estão em openclaw.json"
+      "1. LIST: Get all available models from provider",
+      "2. FILTER: Keep only models that satisfy min_tier and min_context_window",
+      "3. SCORE: Calculate match score based on required_capabilities (weight 70%) + preferred_capabilities (weight 30%)",
+      "4. SORT: Sort by descending score",
+      "5. SELECT: Primary = #1, Fallback_1 = #2, Fallback_2 = #3",
+      "6. VALIDATE: Ensure selected models are in openclaw.json"
     ],
     "scoring": {
       "required_match": 10,
       "preferred_match": 5,
       "tier_bonus": { "S": 20, "A": 15, "A-": 12, "B+": 8, "B": 5, "B-": 3, "C": 1, "D": 0 },
-      "context_bonus": "+1 por 64k acima do mínimo"
+      "context_bonus": "+1 per 64k above minimum"
     }
   },
 
   "agent_role_mapping": {
-    "description": "Mapeamento de agentes para papéis. Não referencia modelos específicos.",
+    "description": "Agent to role mapping. No model IDs, only role references.",
     
-    "zwen": {
-      "name": "Zwen",
-      "roles": ["arquiteto_senior"],
-      "description": "Arquiteto Sênior — decisões arquiteturais, ADRs, stack"
+    "architect_agent": {
+      "roles": ["senior_architect"],
+      "description": "Senior Architect — architectural decisions, ADRs, stack"
     },
-    "freya": {
-      "name": "Freya",
+    "developer_agent": {
       "roles": ["fullstack_developer"],
-      "description": "Full-Stack Developer — implementação de features, código"
+      "description": "Full-Stack Developer — feature implementation, code"
     },
-    "freyr": {
-      "name": "Freyr",
+    "reviewer_agent": {
       "roles": ["code_reviewer", "qa_tester"],
       "model_switching": true,
       "role_contexts": {
-        "code_reviewer": "Quando revisando PRs e código existente",
-        "qa_tester": "Quando gerando testes e validando cobertura"
+        "code_reviewer": "When reviewing PRs and existing code",
+        "qa_tester": "When generating tests and validating coverage"
       },
-      "description": "Code Reviewer + QA Tester — qualidade de código e testes"
+      "description": "Code Reviewer + QA Tester — code quality and tests"
     },
-    "balder": {
-      "name": "Balder",
+    "db_agent": {
       "roles": ["db_architect"],
-      "description": "DB Architect — modelagem de dados, migrations, queries"
+      "description": "DB Architect — data modeling, migrations, queries"
     },
-    "hel": {
-      "name": "Hel",
+    "devops_agent": {
       "roles": ["devops_sre", "security_analyst"],
       "model_switching": true,
       "role_contexts": {
-        "devops_sre": "Quando configurando pipelines, infra, deploys",
-        "security_analyst": "Quando analisando vulnerabilidades, threat modeling"
+        "devops_sre": "When configuring pipelines, infra, deploys",
+        "security_analyst": "When analyzing vulnerabilities, threat modeling"
       },
-      "description": "DevOps/SRE + Security Analyst — infraestrutura e segurança"
+      "description": "DevOps/SRE + Security Analyst — infrastructure and security"
     }
   },
 
   "dynamic_allocation": {
-    "description": "Como o algoritmo aloca modelos em tempo real",
+    "description": "How the algorithm allocates models at runtime",
     
     "on_init": {
-      "step_1": "Detectar papel ativo do agente",
-      "step_2": "Consultar role_requirements para o papel",
-      "step_3": "Executar matching_algorithm",
-      "step_4": "Retornar modelo alocado"
+      "step_1": "Detect agent's active role",
+      "step_2": "Consult role_requirements for the role",
+      "step_3": "Execute matching_algorithm",
+      "step_4": "Return allocated model"
     },
     
     "on_role_switch": {
-      "trigger": "Quando agente muda de papel (ex: Hel: DevOps → Security)",
-      "action": "Re-executar matching_algorithm para novo papel",
-      "optimization": "Preferir manter modelo atual se satisfaz novo papel"
+      "trigger": "When agent changes role (e.g., Agent: DevOps → Security)",
+      "action": "Re-execute matching_algorithm for new role",
+      "optimization": "Prefer keeping current model if it satisfies the new role"
     },
     
     "on_concurrency_limit": {
-      "trigger": "3 modelos já em uso",
+      "trigger": "3 models already in use",
       "strategy": "priority-based-eviction",
       "rules": [
-        "1. Verificar se algum agente está ocioso (>5min sem atividade)",
-        "2. Se sim, liberar modelo do agente ocioso",
-        "3. Se não, usar fallback do modelo solicitado",
-        "4. Fallbacks preferem modelos já carregados (mesma família de provider)"
+        "1. Check if any agent is idle (>5min without activity)",
+        "2. If yes, free the idle agent's model",
+        "3. If no, use fallback for the requested model",
+        "4. Fallbacks prefer already-loaded models (same provider family)"
       ]
     }
   },
 
   "provider_families": {
-    "description": "Agrupamento de providers para otimização de fallbacks",
-    "note": "Usado apenas como hint de otimização, não como restrição",
+    "description": "Provider grouping for fallback optimization",
+    "note": "Used only as optimization hint, not as restriction",
     
     "deepseek_family": {
       "providers": ["ollama/deepseek-*"],
-      "characteristics": ["MoE", "chinês", "alto contexto"]
+      "characteristics": ["MoE", "chinese", "high context"]
     },
     "kimi_family": {
       "providers": ["ollama/kimi-*"],
-      "characteristics": ["MoE", "chinês", "agentic"]
+      "characteristics": ["MoE", "chinese", "agentic"]
     },
     "qwen_family": {
       "providers": ["ollama/qwen*"],
@@ -219,36 +214,36 @@
   },
 
   "override_policy": {
-    "description": "Agentes podem sobrescrever alocações dinâmicas",
+    "description": "Agents can override dynamic allocations",
     "methods": [
-      "Arquivo: ~/.openclaw/workspace/agents/<nome>/factory-init-overrides.json",
-      "Seção em AGENTS.md do workspace",
-      "Variável de ambiente: FACTORY_INIT_OVERRIDE_PATH"
+      "File: ~/.openclaw/workspace/agents/<name>/factory-init-overrides.json",
+      "Section in workspace AGENTS.md",
+      "Environment variable: FACTORY_INIT_OVERRIDE_PATH"
     ],
     "constraints": [
-      "Overrides devem usar modelos disponíveis no openclaw.json",
-      "Overrides não podem aumentar max_concurrent_models",
-      "Overrides são responsabilidade do agente/PO",
-      "Overrides podem especificar provider exato ou capabilities"
+      "Overrides must use models available in openclaw.json",
+      "Overrides cannot increase max_concurrent_models",
+      "Overrides are the agent/PO's responsibility",
+      "Overrides can specify exact provider or capabilities"
     ]
   },
 
   "example_workflow": {
-    "description": "Exemplo de como o router funciona na prática",
+    "description": "Example of how the router works in practice",
     
-    "scenario": "Hel inicia projeto em modo Security",
+    "scenario": "Agent starts project in Security mode",
     "available_models": [
       "ollama/glm-5.1:cloud",
       "ollama/qwen3-coder:480b-cloud",
       "ollama/kimi-k2.6:cloud"
     ],
     
-    "step_1": "Hel requer papel 'security_analyst'",
-    "step_2": "Consultar role_requirements[security_analyst]",
-    "step_3": "Requisitos: raciocinio_profundo + raciocinio_equilibrado, min_tier=A-",
-    "step_4": "Filtrar disponíveis: glm-5.1 (B+ ❌), qwen3-coder (A- ✅), kimi-k2.6 (A ✅)",
-    "step_5": "Scorear: kimi-k2.6 = raciocinio_profundo(10) + contexto_longo(5) + tier_A(15) = 30",
-    "step_6": "Scorear: qwen3-coder = raciocinio_equilibrado(5) + coding(10) + tier_A-(12) = 27",
-    "step_7": "Resultado: Primary=kimi-k2.6, Fallback_1=qwen3-coder, Fallback_2=glm-5.1"
+    "step_1": "Agent requires role 'security_analyst'",
+    "step_2": "Consult role_requirements[security_analyst]",
+    "step_3": "Requirements: deep_reasoning + balanced_reasoning, min_tier=A-",
+    "step_4": "Filter available: glm-5.1 (B+ ❌), qwen3-coder (A- ✅), kimi-k2.6 (A ✅)",
+    "step_5": "Score: kimi-k2.6 = deep_reasoning(10) + long_context(5) + tier_A(15) = 30",
+    "step_6": "Score: qwen3-coder = balanced_reasoning(5) + coding(10) + tier_A-(12) = 27",
+    "step_7": "Result: Primary=kimi-k2.6, Fallback_1=qwen3-coder, Fallback_2=glm-5.1"
   }
 }
